@@ -25,7 +25,7 @@ class RunserverRC {
     }
     // RUN IT
     public function runIt(){
-        $this->CI->load->library('RatchetSV','RatchetSV'); 
+        $this->CI->load->library('RatchetSV'); 
         $this->server = IoServer::factory(
                             new HttpServer(
                                 new WsServer(

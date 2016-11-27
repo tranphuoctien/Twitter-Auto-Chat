@@ -15,27 +15,50 @@ use Ratchet\ConnectionInterface;
 class RatchetSV implements MessageComponentInterface {
     
     protected $clients;
-    
+    protected $store;
+    protected $CI;
+
     public function __construct() {
+        
+        $this->CI = &get_instance();
+
+        $this->CI->load->library('RatchetStore');
+
+        $this->store = new $this->CI->ratchetstore();
+
         $this->clients = new \SplObjectStorage;
     }
 
     public function onOpen(ConnectionInterface $conn) {
         // Store the new connection to send messages to later
+
+        $query = $conn->WebSocket->request->getQuery()->toArray();
+
+        print_r($query);
+        if(isset($query['user'])){
+            $this->store->attach($conn,$query['user']);
+        }
+        
         $this->clients->attach($conn);
 
         echo "New connection! ({$conn->resourceId})\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
+
+        $query = $from->WebSocket->request->getQuery()->toArray();
+        print_r($query);
+
         $numRecv = count($this->clients) - 1;
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
+        $clientSend = $this->store->getClientWithInfo($query['user']);    
+        $clientSend->send($msg);
         foreach ($this->clients as $client) {
             if ($from !== $client) {
                 // The sender is not the receiver, send to each client connected
-                $client->send($msg);
+                //$client->send($msg);
             }
         }
     }
