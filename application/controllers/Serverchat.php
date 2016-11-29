@@ -13,19 +13,7 @@ class Serverchat extends CI_Controller {
 	}
 
 	public function runserver(){
-
-		//$this->load->library('Ratchetsv');	
-		/*$this->ratchetsv->abcsss();
-        $this->server = IoServer::factory(
-                            new HttpServer(
-                                new WsServer(
-                                    new $this->ratchetsv()
-                                )
-                            ),9090);
-         print 'We runing server chat!';
-         $this->server->run();*/
 		 $this->runserverrc->runIt();
-
 	}
 
 	public function testRedis(){

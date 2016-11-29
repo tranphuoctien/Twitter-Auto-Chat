@@ -20,7 +20,7 @@ class RatchetStore extends SplObjectStorage{
     }
 
     public function detach($object){
-        $this->detach($object);
+        //$this->detach($object);
         parent::detach($object);
     }
 
@@ -50,9 +50,12 @@ class RatchetStore extends SplObjectStorage{
         parent::offsetUnset($object);
     }
 
-    protected function detachObject($obj){
+    public function detachObject($obj){
         $info = $this[$obj];
         if (array_key_exists($info, $this->objInfoMapping)) {
+
+            print_r($this->objInfoMapping[$info]);
+
             unset($this->objInfoMapping[$info]);
         }
     }
@@ -67,9 +70,11 @@ class RatchetStore extends SplObjectStorage{
         }
     }
 
-    public function getClientWithInfo($info){
+    public function getClientWithInfo($info = null){
         if (array_key_exists($info, $this->objInfoMapping)) {
             return $this->objInfoMapping[$info];
+        }else{
+            return $this->objInfoMapping;
         }
     }
 }
