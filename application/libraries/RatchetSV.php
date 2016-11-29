@@ -60,9 +60,6 @@ class RatchetSV implements MessageComponentInterface {
         $this->store->detach($conn);        
         $query = $conn->WebSocket->request->getQuery()->toArray();
         print_r($query);
-        if(isset($query['user'])){
-            $this->store->detachObject($query['user']);
-        }
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
